@@ -13,7 +13,6 @@ import lombok.Setter;
 public class GeminiAgent implements Agent {
     private Client client;
     private String model;
-    private GenerateContentResponse response;
     private final Environment env;
 
     public GeminiAgent(Environment env){
@@ -23,7 +22,16 @@ public class GeminiAgent implements Agent {
     }
 
     public String testModel(){
-        response = client.models.generateContent(model, "What is your name", null);
+        GenerateContentResponse response = client.models.generateContent(model, "What is your name", null);
         return response.text();
+    }
+
+    public String execute(String query){
+        try{
+            GenerateContentResponse response = client.models.generateContent(model, query, null);
+            return response.text();
+        }catch(Exception ex){
+            throw new RuntimeException("Error generating response from Gemini Api");
+        }
     }
 }

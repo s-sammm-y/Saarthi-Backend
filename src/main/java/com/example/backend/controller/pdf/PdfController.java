@@ -23,10 +23,12 @@ public class PdfController {
     @PostMapping("upload-pdf")
     public ResponseEntity<Map<String,Object>> processPdf(@RequestParam("pdf") MultipartFile pdf,@RequestParam("user_id") String user_id){
         String fileName = pdf.getOriginalFilename();
-        long size = pdf.getSize();
+        //long size = pdf.getSize();
 
-        System.out.println(fileName);
-        service.testResponse();
-        return ResponseEntity.ok().body(Map.of("message","Succesfully"));
+        String pdfPath = service.savePdf(pdf,user_id);
+        String pdfAnalysis = service.getAnalysis(pdf);
+        // System.out.println("Path to pdf:"+pdfPath);
+        // System.out.println(service.getAnalysis(pdf));
+        return ResponseEntity.ok().body(Map.of("message","Response generated Succesfully","data",pdfAnalysis));
     }
 }
